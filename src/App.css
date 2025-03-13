@@ -1,38 +1,109 @@
-.App {
-  text-align: center;
+.bai-jamjuree-extralight {
+   font-family: 'Bai Jamjuree', sans-serif;
+   font-weight: 200;
+   font-style: normal;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.bai-jamjuree-light {
+   font-family: 'Bai Jamjuree', sans-serif;
+   font-weight: 300;
+   font-style: normal;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.bai-jamjuree-regular {
+   font-family: 'Bai Jamjuree', sans-serif;
+   font-weight: 400;
+   font-style: normal;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.bai-jamjuree-medium {
+   font-family: 'Bai Jamjuree', sans-serif;
+   font-weight: 500;
+   font-style: normal;
 }
 
-.App-link {
-  color: #61dafb;
+.bai-jamjuree-semibold {
+   font-family: 'Bai Jamjuree', sans-serif;
+   font-weight: 600;
+   font-style: normal;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.bai-jamjuree-bold {
+   font-family: 'Bai Jamjuree', sans-serif;
+   font-weight: 700;
+   font-style: normal;
 }
+
+.bai-jamjuree-extralight-italic {
+   font-family: 'Bai Jamjuree', sans-serif;
+   font-weight: 200;
+   font-style: italic;
+}
+
+.bai-jamjuree-light-italic {
+   font-family: 'Bai Jamjuree', sans-serif;
+   font-weight: 300;
+   font-style: italic;
+}
+
+.bai-jamjuree-regular-italic {
+   font-family: 'Bai Jamjuree', sans-serif;
+   font-weight: 400;
+   font-style: italic;
+}
+
+.bai-jamjuree-medium-italic {
+   font-family: 'Bai Jamjuree', sans-serif;
+   font-weight: 500;
+   font-style: italic;
+}
+
+.bai-jamjuree-semibold-italic {
+   font-family: 'Bai Jamjuree', sans-serif;
+   font-weight: 600;
+   font-style: italic;
+}
+
+.bai-jamjuree-bold-italic {
+   font-family: 'Bai Jamjuree', sans-serif;
+   font-weight: 700;
+   font-style: italic;
+}
+
+/* css layout  */
+/* Cấu trúc chung */
+.app-container {
+   display: flex;
+   flex-direction: column;
+   min-height: 100vh;
+}
+
+/* Header */
+.header-container {
+   position: relative;
+   z-index: 50;
+   background: white;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Main content */
+.main-container {
+   display: flex;
+   flex-grow: 1;
+}
+
+/* Nội dung chính */
+.app-content {
+   flex-grow: 1;
+   padding: 20px;
+   min-height: calc(100vh - 80px - 60px);
+}
+
+/* Footer */
+.footer-container {
+   text-align: center;
+   background: #f1f1f1;
+   padding: 10px 0;
+}
+
+/* css layout  */

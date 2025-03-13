@@ -1,22 +1,26 @@
-import { Layout } from "antd";
-import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar";
-// import UserHeader from "./UserHeader";
+import { Layout } from 'antd';
+import { Outlet } from 'react-router-dom';
+import HeaderMenu from './HeaderMenu';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const { Content } = Layout;
+const { Footer } = Layout;
 
-const UserLayout = () => {
-  return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <Sidebar />
-      <Layout>
-        {/* <UserHeader /> */}
-        <Content style={{ margin: "16px" }}>
-          <Outlet />
-        </Content>
-      </Layout>
-    </Layout>
-  );
-};
+export default function UserLayout() {
+   return (
+      <div className="flex flex-col min-h-screen">
+         {/* Header */}
+         <header className=" bg-white shadow-md">
+            <HeaderMenu />
+         </header>
+         {/* Main Content */}
+         <main>
+            <Outlet />
+         </main>
 
-export default UserLayout;
+         {/* Footer */}
+         <footer className="bg-gray-100 text-center p-4 text-sm md:text-base">
+            <Footer>© 2025 EuroTravel. All rights reserved.</Footer>
+         </footer>
+      </div>
+   );
+}
