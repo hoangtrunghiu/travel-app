@@ -1,6 +1,5 @@
-/* background: url('http://localhost:3000/images/banner-image.jpg') center/cover no-repeat; */
 /* ==== BANNER ==== */
-.header-banner {
+.headerBanner {
    display: flex;
    justify-content: space-between;
    align-items: center;
@@ -10,7 +9,7 @@
 }
 
 /* Lớp phủ trắng mờ */
-.header-banner::before {
+.headerBanner::before {
    content: '';
    position: absolute;
    top: 0;
@@ -22,42 +21,53 @@
 }
 
 /* Đảm bảo các hình ảnh và logo nằm trên lớp phủ */
-.banner-img,
-.banner-img1,
-.banner-logo {
+.bannerImg,
+.bannerImg1,
+.bannerLogo {
    position: relative;
    z-index: 2;
 }
 
-.banner-img {
+.bannerImg {
    height: 70px;
 }
-.banner-img1 {
+.bannerImg1 {
    height: 60px;
 }
 
-.banner-logo img {
+.bannerLogo img {
    height: 80px;
 }
+
 /* === MEDIA QUERY CHO MÀN HÌNH NHỎ === */
 @media screen and (max-width: 768px) {
-   .header-banner {
+   .headerBanner {
       height: 60px; /* Giảm chiều cao banner */
       justify-content: center;
    }
 
-   .banner-img1,
-   .banner-img {
+   .bannerImg1,
+   .bannerImg {
       display: none; /* Ẩn hai hình ảnh hai bên */
    }
 
-   .banner-logo img {
+   .bannerLogo img {
       height: 50px; /* Thu nhỏ logo */
    }
 }
 
+/* ==== MENU ==== */
+.customMenu {
+   background-color: #d52028 !important;
+   color: white !important;
+   border: none;
+   display: flex;
+   justify-content: center; /* Căn giữa menu */
+   flex-wrap: wrap; /* Cho phép menu xuống hàng khi thiếu không gian */
+}
+
 /* Sticky Menu */
-.sticky-menu {
+.stickyMenu {
    position: fixed;
    top: 0;
    left: 0;
@@ -69,22 +79,49 @@
    transform: translateY(-100%);
 }
 
-.sticky-menu.show {
+.stickyMenuShow {
    transform: translateY(0);
 }
 
-.sticky-menu.hide {
+.stickyMenuHide {
    transform: translateY(-100%);
 }
 
-/* ==== MENU ==== */
-.custom-menu {
-   background-color: #d52028 !important;
+/* ============ MENU MOBILE ============ */
+.mobileMenuButton {
+   position: absolute;
+   top: 15px;
+   right: 20px;
+   font-size: 24px;
+   color: white;
+   cursor: pointer;
+   z-index: 1001;
+}
+
+.mobileMenu {
+   position: fixed;
+   top: 0;
+   left: -100%;
+   width: 70%;
+   height: 100vh;
+   background-color: rgba(211, 47, 47, 0.9);
+   transition: left 0.3s ease-in-out;
+   z-index: 1000;
+   padding-top: 60px;
+}
+
+.mobileMenuOpen {
+   left: 0;
+}
+
+.mobileMenu .ant-menu {
+   background: none;
    color: white !important;
-   border: none;
-   display: flex;
-   justify-content: center; /* Căn giữa menu */
-   flex-wrap: wrap; /* Cho phép menu xuống hàng khi thiếu không gian */
+}
+
+.mobileMenu .ant-menu-item,
+.mobileMenu .ant-menu-submenu-title {
+   color: white !important;
 }
 
 /* Các mục menu chính */
@@ -111,42 +148,5 @@
    background-color: #d52028 !important;
 }
 .ant-menu-title-content {
-   color: white !important;
-}
-
-/* ============ MENU MOBILE ============ */
-.mobile-menu-button {
-   position: absolute;
-   top: 15px;
-   right: 20px;
-   font-size: 24px;
-   color: white;
-   cursor: pointer;
-   z-index: 1001;
-}
-
-.mobile-menu {
-   position: fixed;
-   top: 0;
-   left: -100%;
-   width: 70%;
-   height: 100vh;
-   background-color: rgba(211, 47, 47, 0.9);
-   transition: left 0.3s ease-in-out;
-   z-index: 1000;
-   padding-top: 60px;
-}
-
-.mobile-menu.open {
-   left: 0;
-}
-
-.mobile-menu .ant-menu {
-   background: none;
-   color: white !important;
-}
-
-.mobile-menu .ant-menu-item,
-.mobile-menu .ant-menu-submenu-title {
    color: white !important;
 }
