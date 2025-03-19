@@ -11,6 +11,8 @@ import Profile from '@/components/Admin/pages/Profile';
 import SignUp from '@/components/Admin/pages/SignUp';
 import SignIn from '@/components/Admin/pages/SignIn';
 import Main from '@/components/Admin/layout/Main';
+//page admin
+import MenuManager from '@/pages/Admin/menu/MenuManager';
 
 const AppRoutes = () => {
    return (
@@ -28,6 +30,7 @@ const AppRoutes = () => {
                <Route path="billing" element={<Billing />} />
                <Route path="rtl" element={<Rtl />} />
                <Route path="profile" element={<Profile />} />
+               <Route path="menus" element={<MenuManager />} />
             </Route>
 
             {/* Layout User */}

@@ -9,15 +9,13 @@ function Footer() {
          <Row className="just">
             <Col xs={24} md={12} lg={12}>
                <div className="copyright">
-                  © 2021, made with
-                  {<HeartFilled />} by
-                  <a href="#pablo" className="font-weight-bold" target="_blank">
-                     Creative Tim
+                  © 2025, made with by
+                  <a href="#hiu" className="font-weight-bold" target="_blank">
+                     Trung Hiu
                   </a>
-                  for a better web.
                </div>
             </Col>
-            <Col xs={24} md={12} lg={12}>
+            {/* <Col xs={24} md={12} lg={12}>
                <div className="footer-menu">
                   <ul>
                      <li className="nav-item">
@@ -42,7 +40,7 @@ function Footer() {
                      </li>
                   </ul>
                </div>
-            </Col>
+            </Col> */}
          </Row>
       </AntFooter>
    );

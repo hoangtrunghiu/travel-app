@@ -165,14 +165,11 @@ function Header({ placement, name, subName, onPress, handleSidenavColor, handleS
 
    return (
       <>
-         <div className="setting-drwer" onClick={showDrawer}>
-            {setting}
-         </div>
          <Row gutter={[24, 0]}>
             <Col span={24} md={6}>
                <Breadcrumb>
                   <Breadcrumb.Item>
-                     <NavLink to="/">Pages</NavLink>
+                     <NavLink to="/admin">Admin</NavLink>
                   </Breadcrumb.Item>
                   <Breadcrumb.Item style={{ textTransform: 'capitalize' }}>{name.replace('/', '')}</Breadcrumb.Item>
                </Breadcrumb>
@@ -183,20 +180,20 @@ function Header({ placement, name, subName, onPress, handleSidenavColor, handleS
                </div>
             </Col>
             <Col span={24} md={18} className="header-control">
-               <Badge size="small" count={4}>
+               {/* <Badge size="small" count={4}>
                   <Dropdown overlay={menu} trigger={['click']}>
                      <a href="#pablo" className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
                         {bell}
                      </a>
                   </Dropdown>
-               </Badge>
-               <Button type="link" onClick={showDrawer}>
+               </Badge> */}
+               {/* <Button type="link" onClick={showDrawer}>
                   {logsetting}
-               </Button>
+               </Button> */}
                <Button type="link" className="sidebar-toggler" onClick={() => onPress()}>
                   {toggler}
                </Button>
-               <Drawer
+               {/* <Drawer
                   className="settings-drawer"
                   mask={true}
                   width={360}
@@ -287,11 +284,11 @@ function Header({ placement, name, subName, onPress, handleSidenavColor, handleS
                         </div>
                      </div>
                   </div>
-               </Drawer>
-               <Link to="/sign-in" className="btn-sign-in">
+               </Drawer> */}
+               {/* <Link to="/sign-in" className="btn-sign-in">
                   {profile}
                   <span>Sign in</span>
-               </Link>
+               </Link> */}
                <Input className="header-search" placeholder="Type here..." prefix={<SearchOutlined />} />
             </Col>
          </Row>

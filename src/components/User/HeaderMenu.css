@@ -150,3 +150,8 @@
 .mobile-menu .ant-menu-submenu-title {
    color: white !important;
 }
+
+/* Ẩn icon submenu cho menu 1 cấp và menu con */
+.ant-menu-submenu .ant-menu-submenu-arrow {
+   display: none !important;
+}

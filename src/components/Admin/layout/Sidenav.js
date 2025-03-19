@@ -1,7 +1,6 @@
 import { Menu, Button } from 'antd';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import logo from '@/assets/images/logo.png';
-import { UserOutlined, TeamOutlined, SettingOutlined } from '@ant-design/icons';
 
 function Sidenav({ color }) {
    const { pathname } = useLocation();
@@ -94,6 +93,11 @@ function Sidenav({ color }) {
          <path d="M2,0A2,2,0,0,0,0,2V8a2,2,0,0,0,2,2V4A2,2,0,0,1,4,2h6A2,2,0,0,0,8,0Z" fill={color} />
       </svg>,
    ];
+   const toggler = [
+      <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" key={0}>
+         <path d="M16 132h416c8.837 0 16-7.163 16-16V76c0-8.837-7.163-16-16-16H16C7.163 60 0 67.163 0 76v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm0 160h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16z"></path>
+      </svg>,
+   ];
 
    return (
       <>
@@ -116,15 +120,10 @@ function Sidenav({ color }) {
                   <span className="label">Dashboard</span>
                </Link>
             </Menu.Item>
-            <Menu.SubMenu key="sub1" icon={<SettingOutlined />} title="Admin">
-               <Menu.Item key="sub1-1">
-                  <Link to="/admin/users">Users</Link>
-               </Menu.Item>
-               <Menu.Item key="sub1-2">
-                  <Link to="/admin/roles">Roles</Link>
-               </Menu.Item>
-            </Menu.SubMenu>
-            <Menu.Item key="2">
+            <Menu.Item className="menu-item-header" key="2">
+               <span className="text-black">Trang nội dung</span>
+            </Menu.Item>
+            <Menu.Item key="3">
                <Link to="/admin/tables">
                   <span
                      className="icon"
@@ -137,7 +136,7 @@ function Sidenav({ color }) {
                   <span className="label">Tables</span>
                </Link>
             </Menu.Item>
-            <Menu.Item key="3">
+            <Menu.Item key="4">
                <Link to="/admin/billing">
                   <span
                      className="icon"
@@ -150,7 +149,7 @@ function Sidenav({ color }) {
                   <span className="label">Billing</span>
                </Link>
             </Menu.Item>
-            <Menu.Item key="4">
+            <Menu.Item key="5">
                <Link to="/admin/rtl">
                   <span
                      className="icon"
@@ -163,10 +162,23 @@ function Sidenav({ color }) {
                   <span className="label">RTL</span>
                </Link>
             </Menu.Item>
-            <Menu.Item className="menu-item-header" key="5">
-               Account Pages
+            <Menu.Item className="menu-item-header" key="6">
+               <span className="text-black">Cấu Hình Website</span>
             </Menu.Item>
-            <Menu.Item key="6">
+            <Menu.Item key="7">
+               <Link to="/admin/menus">
+                  <span
+                     className="icon"
+                     style={{
+                        background: page === 'profile' ? color : '',
+                     }}
+                  >
+                     {toggler}
+                  </span>
+                  <span className="label">Menu</span>
+               </Link>
+            </Menu.Item>
+            <Menu.Item key="8">
                <Link to="/admin/profile">
                   <span
                      className="icon"
@@ -179,13 +191,13 @@ function Sidenav({ color }) {
                   <span className="label">Profile</span>
                </Link>
             </Menu.Item>
-            <Menu.Item key="7">
+            <Menu.Item key="9">
                <NavLink to="/sign-in">
                   <span className="icon">{signin}</span>
                   <span className="label">Sign In</span>
                </NavLink>
             </Menu.Item>
-            <Menu.Item key="8">
+            <Menu.Item key="10">
                <NavLink to="/sign-up">
                   <span className="icon">{signup}</span>
                   <span className="label">Sign Up</span>

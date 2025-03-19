@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Menu } from 'antd';
 import { DownOutlined, MenuOutlined, CloseOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 import './HeaderMenu.css';
+import menuApi from '@/api/menuApi';
 
 const items = [
    { label: 'GIỚI THIỆU', key: 'about' },
@@ -43,6 +45,71 @@ const HeaderMenu = () => {
    const [lastScrollY, setLastScrollY] = useState(0);
    const [isMobile, setIsMobile] = useState(window.innerWidth < 820);
    const [menuOpen, setMenuOpen] = useState(false);
+   const [menus, setMenus] = useState([]); // Lấy từ API menu
+
+   useEffect(() => {
+      fetchAllMenus();
+   }, []);
+
+   const fetchAllMenus = async () => {
+      try {
+         const response = await menuApi.GetListMenuOfShow();
+         if (response?.data?.length) {
+            // console.log('Fetched menus:', response.data);
+            setMenus(response.data);
+         }
+      } catch (error) {
+         console.error('Error fetching menus:', error);
+      }
+   };
+   const menuItems = useMemo(() => {
+      const menuMap = new Map();
+      const rootMenus = [];
+
+      // Tạo object Map để lưu trữ menu
+      menus.forEach((menu) => {
+         menuMap.set(String(menu.Id), {
+            key: String(menu.Id),
+            label: (
+               <Link to={menu.MenuUrl} style={{ all: 'unset' }}>
+                  {menu.MenuName}
+               </Link>
+            ),
+            children: [],
+         });
+      });
+
+      // Xây dựng cây menu
+      menus.forEach((menu) => {
+         const menuItem = menuMap.get(String(menu.Id));
+
+         if (!menu.ParentId || !menuMap.has(String(menu.ParentId))) {
+            rootMenus.push(menuItem);
+         } else {
+            const parentMenu = menuMap.get(String(menu.ParentId));
+            if (parentMenu) {
+               parentMenu.children.push(menuItem);
+            } else {
+               console.warn(`Parent ID ${menu.ParentId} not found in menuMap!`);
+            }
+         }
+      });
+
+      // Chỉ thêm icon vào menu cha có menu con
+      rootMenus.forEach((menu) => {
+         if (menu.children.length > 0) {
+            menu.label = (
+               <>
+                  {menu.label} <DownOutlined className="menu-arrow" />
+               </>
+            );
+         }
+      });
+
+      return rootMenus;
+   }, [menus]);
+
+   // console.log('Final menuItems:', menuItems);
 
    const onClick = (e) => {
       setCurrent(e.key);
@@ -106,7 +173,7 @@ const HeaderMenu = () => {
                   onClick={onClick}
                   selectedKeys={[current]}
                   mode="horizontal"
-                  items={items}
+                  items={menuItems}
                   className="custom-menu"
                />
             </div>
@@ -119,7 +186,7 @@ const HeaderMenu = () => {
                   {menuOpen ? <CloseOutlined /> : <MenuOutlined />}
                </div>
                <div className={`mobile-menu ${menuOpen ? 'open' : ''}`}>
-                  <Menu onClick={onClick} selectedKeys={[current]} mode="inline" items={items} />
+                  <Menu onClick={onClick} selectedKeys={[current]} mode="inline" items={menuItems} />
                </div>
             </>
          )}
@@ -131,7 +198,7 @@ const HeaderMenu = () => {
                   onClick={onClick}
                   selectedKeys={[current]}
                   mode="horizontal"
-                  items={items}
+                  items={menuItems}
                   className="custom-menu"
                />
             </div>
