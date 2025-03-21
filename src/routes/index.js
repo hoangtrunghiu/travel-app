@@ -13,6 +13,9 @@ import SignIn from '@/components/Admin/pages/SignIn';
 import Main from '@/components/Admin/layout/Main';
 //page admin
 import MenuManager from '@/pages/Admin/menu/MenuManager';
+import ListCategory from '@/pages/Admin/blog/ListCategory';
+import CreateCategory from '@/pages/Admin/blog/CreateCategory';
+import UpdateCategory from '@/pages/Admin/blog/UpdateCategory';
 
 const AppRoutes = () => {
    return (
@@ -31,6 +34,9 @@ const AppRoutes = () => {
                <Route path="rtl" element={<Rtl />} />
                <Route path="profile" element={<Profile />} />
                <Route path="menus" element={<MenuManager />} />
+               <Route path="category/list" element={<ListCategory />} />
+               <Route path="category/create" element={<CreateCategory />} />
+               <Route path="category/edit/:id" element={<UpdateCategory />} />
             </Route>
 
             {/* Layout User */}

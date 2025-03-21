@@ -26,7 +26,7 @@ export default function MenuForm({ menu, onSuccess, onClose }) {
       try {
          const response = await menuApi.getMenuHierarchy();
          if (response?.data?.length) {
-            console.log('Fetched menus:', response.data);
+            // console.log('Fetched menus:', response.data);
             setMenus(response.data);
          }
       } catch (error) {

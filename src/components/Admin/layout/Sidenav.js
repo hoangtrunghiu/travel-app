@@ -123,6 +123,19 @@ function Sidenav({ color }) {
             <Menu.Item className="menu-item-header" key="2">
                <span className="text-black">Trang nội dung</span>
             </Menu.Item>
+            <Menu.Item key="33">
+               <Link to="/admin/category/list">
+                  <span
+                     className="icon"
+                     style={{
+                        background: page === 'tables' ? color : '',
+                     }}
+                  >
+                     {tables}
+                  </span>
+                  <span className="label">Category Blog</span>
+               </Link>
+            </Menu.Item>
             <Menu.Item key="3">
                <Link to="/admin/tables">
                   <span
