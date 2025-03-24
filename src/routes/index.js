@@ -16,6 +16,7 @@ import MenuManager from '@/pages/Admin/menu/MenuManager';
 import ListCategory from '@/pages/Admin/blog/ListCategory';
 import CreateCategory from '@/pages/Admin/blog/CreateCategory';
 import UpdateCategory from '@/pages/Admin/blog/UpdateCategory';
+import FileManager from '@/components/Admin/FileManager/FileManager';
 
 const AppRoutes = () => {
    return (
@@ -37,6 +38,7 @@ const AppRoutes = () => {
                <Route path="category/list" element={<ListCategory />} />
                <Route path="category/create" element={<CreateCategory />} />
                <Route path="category/edit/:id" element={<UpdateCategory />} />
+               <Route path="files" element={<FileManager />} />
             </Route>
 
             {/* Layout User */}
