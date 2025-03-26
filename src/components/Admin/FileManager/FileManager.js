@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { message } from 'antd';
 import {
    UploadOutlined,
    FileImageOutlined,
@@ -20,18 +19,6 @@ import LibrarySection from './LibrarySection';
 import FolderSection from './FolderSection';
 import NewFolderModal from './NewFolderModal';
 
-// Base API URL
-const API_BASE_URL = 'https://localhost:5001/api';
-
-// API endpoints
-const API_ENDPOINTS = {
-   files: `${API_BASE_URL}/files`,
-   folders: `${API_BASE_URL}/folders`,
-   uploadFile: `${API_BASE_URL}/files/upload`,
-   downloadFile: (id) => `${API_BASE_URL}/files/download/${id}`,
-   filesByFolder: (folderId) => `${API_BASE_URL}/folders/${folderId}/files`,
-};
-
 const FileManager = ({ onSelectFile, onInsertFile, isSelectingAvatar = false }) => {
    // State
    const [currentMenu, setCurrentMenu] = useState('upload');
@@ -42,7 +29,6 @@ const FileManager = ({ onSelectFile, onInsertFile, isSelectingAvatar = false }) 
    const [loading, setLoading] = useState(false);
    const [searchQuery, setSearchQuery] = useState('');
    const [newFolderVisible, setNewFolderVisible] = useState(false);
-   const [newFolderName, setNewFolderName] = useState('');
    const [uploadedCount, setUploadedCount] = useState(0);
    const [totalToUpload, setTotalToUpload] = useState(0);
    const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -134,7 +120,7 @@ const FileManager = ({ onSelectFile, onInsertFile, isSelectingAvatar = false }) 
 
          onSuccess(response.data);
          setUploadedCount((prev) => prev + 1);
-         notifySuccess('Tải lên thành công', `${file.name} đã được tải lên thành công.`);
+         // notifySuccess('Tải lên thành công', `${file.name} đã được tải lên thành công.`);
       } catch (error) {
          console.error('Lỗi khi tải lên:', error);
          onError();
@@ -160,6 +146,9 @@ const FileManager = ({ onSelectFile, onInsertFile, isSelectingAvatar = false }) 
    // Handle file selection for use in editor or as avatar
    const handleSelectFile = (file) => {
       if (onSelectFile) {
+         console.log(onSelectFile(file));
+         console.log(file);
+         console.log(onSelectFile);
          onSelectFile(file);
       }
    };
@@ -167,7 +156,8 @@ const FileManager = ({ onSelectFile, onInsertFile, isSelectingAvatar = false }) 
    // Handle insert file into content
    const handleInsertFile = (file) => {
       if (onInsertFile) {
-         onInsertFile(file);
+         console.log('File được chèn:', file);
+         onInsertFile(file); // Gửi file về component cha
       }
    };
 
@@ -183,27 +173,8 @@ const FileManager = ({ onSelectFile, onInsertFile, isSelectingAvatar = false }) 
       }
    };
 
-   // Handle folder creation
-   const handleCreateFolder = async () => {
-      if (!newFolderName.trim()) {
-         notifyError('Tên thư mục không được để trống');
-         return;
-      }
-
-      try {
-         await axiosClient.post('/folders', {
-            name: newFolderName,
-         });
-
-         notifySuccess(`Thư mục ${newFolderName} đã được tạo thành công.`);
-         setNewFolderName('');
-         setNewFolderVisible(false);
-         fetchData();
-      } catch (error) {
-         notifyError('Không thể tạo thư mục mới:');
-         console.error('Lỗi khi tạo thư mục:', error);
-      }
-   };
+   // Đóng modal tạo thư mục
+   const closeNewFolderModal = () => setNewFolderVisible(false);
 
    // Handle folder navigation
    const handleOpenFolder = (folder) => {
@@ -280,7 +251,6 @@ const FileManager = ({ onSelectFile, onInsertFile, isSelectingAvatar = false }) 
 
    // Common props for child components
    const commonProps = {
-      API_ENDPOINTS,
       currentFolder,
       handleBackToRoot,
       handleOpenFolder,
@@ -372,14 +342,7 @@ const FileManager = ({ onSelectFile, onInsertFile, isSelectingAvatar = false }) 
             <div className="file-manager-content flex-1 p-4 overflow-auto">{renderContent()}</div>
 
             {/* Modal Tạo thư mục mới */}
-            <NewFolderModal
-               visible={newFolderVisible}
-               onCancel={() => setNewFolderVisible(false)}
-               onOk={handleCreateFolder}
-               folderName={newFolderName}
-               setFolderName={setNewFolderName}
-               currentFolder={currentFolder}
-            />
+            <NewFolderModal visible={newFolderVisible} onClose={closeNewFolderModal} fetchData={fetchData} />
          </div>
       </>
    );

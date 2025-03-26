@@ -1,15 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Input, Breadcrumb, Spin, Empty, Popconfirm, Select, Drawer, Form, Tooltip, message } from 'antd';
-import {
-   HomeOutlined,
-   UploadOutlined,
-   DeleteOutlined,
-   DownloadOutlined,
-   InsertRowBelowOutlined,
-   PictureOutlined,
-   EditOutlined,
-   FileImageOutlined,
-} from '@ant-design/icons';
+import { Button, Input, Breadcrumb, Spin, Empty, Popconfirm, Select, Drawer, Form, Tooltip } from 'antd';
+import { HomeOutlined, UploadOutlined, DeleteOutlined, DownloadOutlined, EditOutlined } from '@ant-design/icons';
 import axiosClient from '@/api/axiosClient';
 import { useNotify } from '@/utils/notify'; //thông báo
 
@@ -17,7 +8,6 @@ const { Search } = Input;
 const { Option } = Select;
 
 const LibrarySection = ({
-   API_ENDPOINTS,
    currentFolder,
    folderPath,
    handleBackToRoot,
@@ -25,7 +15,6 @@ const LibrarySection = ({
    handleOpenFolder,
    handleSearch,
    handleDeleteFile,
-   handleSelectFile,
    handleInsertFile,
    getFileIcon,
    isImage,
@@ -40,7 +29,6 @@ const LibrarySection = ({
    const [selectedFile, setSelectedFile] = useState(null);
    const [sidebarVisible, setSidebarVisible] = useState(false);
    const [selectedFolder, setSelectedFolder] = useState(currentFolder?.id || null);
-   const [insertType, setInsertType] = useState('avatar'); // avatar, gallery, editor
    const [form] = Form.useForm();
    const { notifySuccess, notifyError, contextHolder } = useNotify(); //thông báo
 
@@ -63,7 +51,6 @@ const LibrarySection = ({
       // Pre-populate form with file's current folder
       form.setFieldsValue({
          parentFolder: file.folderId || null,
-         insertType: 'avatar',
       });
    };
 
@@ -76,21 +63,10 @@ const LibrarySection = ({
    // Handle file insert based on type
    const handleFileInsertByType = () => {
       if (!selectedFile) return;
-      console.log('Insert type:', insertType);
-      console.log(selectedFile);
-      switch (insertType) {
-         case 'avatar':
-            handleSelectFile(selectedFile); // For avatar selection
-            break;
-         case 'gallery':
-            // Handle gallery insert (you may need to implement this function)
-            message.success('Đã thêm vào bộ sưu tập');
-            break;
-         case 'editor':
-            handleInsertFile(selectedFile); // For editor insert
-            break;
-         default:
-            handleSelectFile(selectedFile);
+      console.log('File được chọn:', selectedFile); // Debug
+
+      if (handleInsertFile) {
+         handleInsertFile(selectedFile); // Gửi file về `FileManager`
       }
 
       closeSidebar();
@@ -272,20 +248,6 @@ const LibrarySection = ({
                            Cập nhật thư mục
                         </Button>
                      </Form.Item>
-
-                     <Form.Item name="insertType" label="Chèn vào">
-                        <Select defaultValue="avatar" onChange={(value) => setInsertType(value)}>
-                           <Option value="avatar">
-                              <PictureOutlined /> Ảnh đại diện
-                           </Option>
-                           <Option value="gallery">
-                              <FileImageOutlined /> Bộ sưu tập
-                           </Option>
-                           <Option value="editor">
-                              <InsertRowBelowOutlined /> Editor
-                           </Option>
-                        </Select>
-                     </Form.Item>
                   </Form>
 
                   <Popconfirm
@@ -304,7 +266,7 @@ const LibrarySection = ({
 
                   <div className="mt-4">
                      <a
-                        href={API_ENDPOINTS.downloadFile(selectedFile.id)}
+                        href={BASE_URL + `api/files/download/${selectedFile.id}`}
                         download={selectedFile.name}
                         className="block"
                      >
