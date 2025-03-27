@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { CKEditor, useCKEditorCloud } from '@ckeditor/ckeditor5-react';
-import FileManagerModal from '@/components/Admin/FileManager/FileManagerModal';
 
 import './CustomCKEditor.css';
 
@@ -13,7 +12,9 @@ export default function CustomCKEditor({ value, onChange }) {
    const editorWordCountRef = useRef(null);
    const [isLayoutReady, setIsLayoutReady] = useState(false);
    const cloud = useCKEditorCloud({ version: '44.3.0', translations: ['vi'] });
-
+   // Hàm lấy token từ localStorage
+   const getToken = () => localStorage.getItem('jwt');
+   const token = getToken();
    useEffect(() => {
       setIsLayoutReady(true);
 
@@ -32,7 +33,7 @@ export default function CustomCKEditor({ value, onChange }) {
          AutoImage,
          AutoLink,
          Autosave,
-         Base64UploadAdapter,
+         // Base64UploadAdapter,
          BlockQuote,
          Bold,
          CodeBlock,
@@ -116,7 +117,7 @@ export default function CustomCKEditor({ value, onChange }) {
                AutoImage,
                AutoLink,
                Autosave,
-               Base64UploadAdapter,
+               // Base64UploadAdapter,
                BlockQuote,
                Bold,
                CodeBlock,
@@ -231,6 +232,16 @@ export default function CustomCKEditor({ value, onChange }) {
                   '|',
                   'resizeImage',
                ],
+               upload: {
+                  types: ['jpeg', 'png', 'gif', 'bmp', 'webp'],
+               },
+            },
+            simpleUpload: {
+               uploadUrl: 'https://localhost:5001/api/files/upload-editor', // Địa chỉ API backend của bạn
+               withCredentials: true,
+               headers: {
+                  Authorization: token ? `Bearer ${token}` : '', // Thêm token nếu cần authentication
+               },
             },
             initialData: value || '',
             licenseKey: LICENSE_KEY,
