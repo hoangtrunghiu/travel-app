@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react';
+import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { CKEditor, useCKEditorCloud } from '@ckeditor/ckeditor5-react';
 
 import './CustomCKEditor.css';
@@ -10,16 +10,71 @@ export default function CustomCKEditor({ value, onChange }) {
    const editorContainerRef = useRef(null);
    const editorRef = useRef(null);
    const editorWordCountRef = useRef(null);
+   const wordCountChildrenRef = useRef([]);
+   const editorInstanceRef = useRef(null);
    const [isLayoutReady, setIsLayoutReady] = useState(false);
+   const [initialValue] = useState(value || ''); // Store initial value only once
    const cloud = useCKEditorCloud({ version: '44.3.0', translations: ['vi'] });
-   // Hàm lấy token từ localStorage
-   const getToken = () => localStorage.getItem('jwt');
-   const token = getToken();
-   useEffect(() => {
-      setIsLayoutReady(true);
 
-      return () => setIsLayoutReady(false);
+   // Hàm lấy token từ localStorage - chỉ gọi một lần để tránh re-render
+   const token = useMemo(() => localStorage.getItem('jwt'), []);
+
+   // Sử dụng useCallback để không tạo ra hàm mới mỗi lần render
+   const handleEditorChange = useCallback(
+      (event, editor) => {
+         // Chỉ gọi onChange khi nội dung thực sự thay đổi
+         const data = editor.getData();
+         onChange(data);
+      },
+      [onChange],
+   );
+
+   // Sử dụng useCallback cho onReady để tránh tạo lại hàm mỗi lần render
+   const handleEditorReady = useCallback((editor) => {
+      editorInstanceRef.current = editor;
+      try {
+         if (editor && editor.plugins && editorWordCountRef.current) {
+            const wordCount = editor.plugins.get('WordCount');
+            if (wordCount && wordCount.wordCountContainer) {
+               editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
+               // Store reference to the child element
+               wordCountChildrenRef.current.push(wordCount.wordCountContainer);
+            }
+         }
+      } catch (error) {
+         console.error('Error setting up word count:', error);
+      }
    }, []);
+
+   // Fix: Move state update to useEffect to prevent updates on unmounted component
+   useEffect(() => {
+      // Only set layout ready after component is mounted
+      const timeout = setTimeout(() => {
+         setIsLayoutReady(true);
+      }, 0);
+
+      return () => {
+         clearTimeout(timeout);
+         setIsLayoutReady(false);
+
+         // Clean up word count children on unmount
+         if (wordCountChildrenRef.current.length && editorWordCountRef.current) {
+            wordCountChildrenRef.current.forEach((child) => {
+               if (editorWordCountRef.current && editorWordCountRef.current.contains(child)) {
+                  editorWordCountRef.current.removeChild(child);
+               }
+            });
+         }
+         wordCountChildrenRef.current = [];
+      };
+   }, []);
+
+   // Cập nhật giá trị từ bên ngoài vào editor mà không gây ra re-render
+   useEffect(() => {
+      if (editorInstanceRef.current && value !== undefined && value !== editorInstanceRef.current.getData()) {
+         editorInstanceRef.current.setData(value);
+      }
+   }, [value]);
 
    const { ClassicEditor, editorConfig } = useMemo(() => {
       if (cloud.status !== 'success' || !isLayoutReady) {
@@ -33,7 +88,6 @@ export default function CustomCKEditor({ value, onChange }) {
          AutoImage,
          AutoLink,
          Autosave,
-         // Base64UploadAdapter,
          BlockQuote,
          Bold,
          CodeBlock,
@@ -117,7 +171,6 @@ export default function CustomCKEditor({ value, onChange }) {
                AutoImage,
                AutoLink,
                Autosave,
-               // Base64UploadAdapter,
                BlockQuote,
                Bold,
                CodeBlock,
@@ -237,13 +290,13 @@ export default function CustomCKEditor({ value, onChange }) {
                },
             },
             simpleUpload: {
-               uploadUrl: 'https://localhost:5001/api/files/upload-editor', // Địa chỉ API backend của bạn
+               uploadUrl: 'https://localhost:5001/api/files/upload-editor',
                withCredentials: true,
                headers: {
-                  Authorization: token ? `Bearer ${token}` : '', // Thêm token nếu cần authentication
+                  Authorization: token ? `Bearer ${token}` : '',
                },
             },
-            initialData: value || '',
+            initialData: initialValue, // Sử dụng state value ban đầu thay vì prop value để tránh re-render
             licenseKey: LICENSE_KEY,
             link: {
                addTargetToExternalLinks: true,
@@ -258,13 +311,29 @@ export default function CustomCKEditor({ value, onChange }) {
                   },
                },
             },
-            // placeholder: 'Type or paste your content here!',
             table: {
                contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells', 'tableProperties', 'tableCellProperties'],
             },
          },
       };
-   }, [cloud, value]);
+   }, [cloud, isLayoutReady, initialValue, token]);
+
+   // Sử dụng useMemo cho việc render component để tránh re-render không cần thiết
+   const editorComponent = useMemo(() => {
+      if (!ClassicEditor || !editorConfig || !isLayoutReady) {
+         return null;
+      }
+
+      return (
+         <CKEditor
+            editor={ClassicEditor}
+            config={editorConfig}
+            data={initialValue}
+            onChange={handleEditorChange}
+            onReady={handleEditorReady}
+         />
+      );
+   }, [ClassicEditor, editorConfig, isLayoutReady, initialValue, handleEditorChange, handleEditorReady]);
 
    return (
       <div className="main-container-ckeditor">
@@ -273,23 +342,7 @@ export default function CustomCKEditor({ value, onChange }) {
             ref={editorContainerRef}
          >
             <div className="editor-container__editor">
-               <div ref={editorRef}>
-                  {ClassicEditor && editorConfig && (
-                     <CKEditor
-                        editor={ClassicEditor}
-                        config={editorConfig}
-                        data={value}
-                        onChange={(event, editor) => onChange(editor.getData())}
-                        onReady={(editor) => {
-                           const wordCount = editor.plugins.get('WordCount');
-                           editorWordCountRef.current.appendChild(wordCount.wordCountContainer);
-                        }}
-                        onAfterDestroy={() => {
-                           Array.from(editorWordCountRef.current.children).forEach((child) => child.remove());
-                        }}
-                     />
-                  )}
-               </div>
+               <div ref={editorRef}>{editorComponent}</div>
             </div>
             <div className="editor_container__word-count" ref={editorWordCountRef}></div>
          </div>

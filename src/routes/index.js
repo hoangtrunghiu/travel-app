@@ -18,6 +18,8 @@ import CreateCategory from '@/pages/Admin/blog/CreateCategory';
 import UpdateCategory from '@/pages/Admin/blog/UpdateCategory';
 import FileManager from '@/components/Admin/FileManager/FileManager';
 import FilePickerDemo from '@/components/Admin/FileManager/FilePickerDemo';
+import PostList from '@/pages/Admin/blog/PostList';
+import PostForm from '@/pages/Admin/blog/PostForm';
 
 const AppRoutes = () => {
    return (
@@ -41,6 +43,9 @@ const AppRoutes = () => {
                <Route path="category/edit/:id" element={<UpdateCategory />} />
                <Route path="files" element={<FileManager />} />
                <Route path="file-demo" element={<FilePickerDemo />} />
+               <Route path="post/list" element={<PostList />} />
+               <Route path="post/create" element={<PostForm />} />
+               <Route path="post/edit/:id" element={<PostForm />} />
             </Route>
 
             {/* Layout User */}

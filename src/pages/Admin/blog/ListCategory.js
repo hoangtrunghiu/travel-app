@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, message, Popconfirm, Card } from 'antd';
+import { Table, Button, Space, Popconfirm, Card } from 'antd';
 import { deleteCategory, flattenCategories } from '@/services/categoryService';
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import categoryApi from '@/api/categoryApi';
 import { useNotify } from '@/utils/notify';
+import SearchTable from '@/utils/searchTable';
 
 import { Link } from 'react-router-dom';
 
@@ -11,6 +12,8 @@ const ListCategory = () => {
    const [categories, setCategories] = useState([]);
    const [loading, setLoading] = useState(false);
    const { notifySuccess, contextHolder } = useNotify();
+   const { getColumnSearchProps } = SearchTable(); //tìm kiếm trên table
+
    useEffect(() => {
       fetchCategories();
    }, []);
@@ -22,7 +25,7 @@ const ListCategory = () => {
          const flatCategories = flattenCategories(response.data); // Chuyển đổi dữ liệu
          setCategories(flatCategories);
       } catch (error) {
-         message.error('Lỗi khi tải danh sách category');
+         console.error('Lỗi khi tải danh sách category ', error);
       } finally {
          setLoading(false);
       }
@@ -34,7 +37,7 @@ const ListCategory = () => {
          notifySuccess('Xóa thành công', `Danh mục "${data.title}" đã được xóa.`);
          fetchCategories();
       } catch (error) {
-         message.error('Lỗi khi xóa danh mục');
+         console.error('Lỗi khi xóa danh mục');
       }
    };
 
@@ -48,6 +51,7 @@ const ListCategory = () => {
          title: 'Tên danh mục',
          dataIndex: 'title',
          key: 'title',
+         ...getColumnSearchProps('title'),
          render: (text, record) => (
             // <span style={{ paddingLeft: `${record.level * 20}px`, fontWeight: record.level === 0 ? 'bold' : 'normal' }}>
             <span style={{ paddingLeft: `${record.level * 20}px` }}>{text}</span>
@@ -57,6 +61,7 @@ const ListCategory = () => {
          title: 'Đường dẫn (URL)',
          dataIndex: 'slug',
          key: 'slug',
+         ...getColumnSearchProps('slug'),
       },
       {
          title: 'Danh mục cha',
@@ -107,7 +112,12 @@ const ListCategory = () => {
                columns={columns}
                rowKey="key"
                loading={loading}
-               pagination={{ pageSize: 20 }}
+               pagination={{
+                  showSizeChanger: true,
+                  pageSizeOptions: ['5', '10', '20', '50'],
+                  showQuickJumper: true,
+                  showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} danh mục`,
+               }}
                scroll={{ x: 'max-content' }}
             />
          </Card>
