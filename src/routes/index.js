@@ -7,9 +7,6 @@ import HomePage from '@/pages/User/Home';
 import Tables from '@/components/Admin/pages/Tables';
 import Billing from '@/components/Admin/pages/Billing';
 import Rtl from '@/components/Admin/pages/Rtl';
-import Profile from '@/components/Admin/pages/Profile';
-import SignUp from '@/components/Admin/pages/SignUp';
-import SignIn from '@/components/Admin/pages/SignIn';
 import Main from '@/components/Admin/layout/Main';
 //page admin
 import MenuManager from '@/pages/Admin/menu/MenuManager';
@@ -21,13 +18,17 @@ import FilePickerDemo from '@/components/Admin/FileManager/FilePickerDemo';
 import PostList from '@/pages/Admin/blog/PostList';
 import PostForm from '@/pages/Admin/blog/PostForm';
 
+import Register from '@/pages/Auth/Register';
+import AdminLogin from '@/pages/Auth/AdminLogin';
+import Profile from '@/pages/Auth/Profile';
+
 const AppRoutes = () => {
    return (
       <Router>
          <Routes>
             {/* Authentication Routes */}
-            <Route path="/sign-up" element={<SignUp />} />
-            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/login" element={<AdminLogin />} />
+            <Route path="/register" element={<Register />} />
 
             {/* Layout Admin */}
             <Route path="/admin/*" element={<Main />}>

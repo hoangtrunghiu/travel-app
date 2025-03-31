@@ -218,15 +218,15 @@ function Sidenav({ color }) {
                </Link>
             </Menu.Item>
             <Menu.Item key="9">
-               <NavLink to="/sign-in">
+               <NavLink to="/login">
                   <span className="icon">{signin}</span>
-                  <span className="label">Sign In</span>
+                  <span className="label">Login</span>
                </NavLink>
             </Menu.Item>
             <Menu.Item key="10">
-               <NavLink to="/sign-up">
+               <NavLink to="/register">
                   <span className="icon">{signup}</span>
-                  <span className="label">Sign Up</span>
+                  <span className="label">Register</span>
                </NavLink>
             </Menu.Item>
          </Menu>

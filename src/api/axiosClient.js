@@ -23,23 +23,23 @@ axiosClient.interceptors.request.use(
    (error) => Promise.reject(error),
 );
 
-// axiosClient.interceptors.response.use(
-//    (response) => response,
-//    async (error) => {
-//       if (error.response?.status === 401) {
-//          const currentPath = window.location.pathname;
+axiosClient.interceptors.response.use(
+   (response) => response,
+   async (error) => {
+      if (error.response?.status === 401) {
+         const currentPath = window.location.pathname;
 
-//          // Kiểm tra nếu đang ở trang admin
-//          if (currentPath.startsWith('/admin')) {
-//             window.location.href = '/admin/login';
-//          } else {
-//             window.location.href = '/login';
-//          }
-//       }
+         // Kiểm tra nếu đang ở trang admin
+         if (currentPath.startsWith('/admin')) {
+            window.location.href = '/login';
+         } else {
+            window.location.href = '/login';
+         }
+      }
 
-//       console.error(`Error! Status Code: ${error.response?.status}`);
-//       return Promise.reject(error);
-//    },
-// );
+      console.error(`Error! Status Code: ${error.response?.status}`);
+      return Promise.reject(error);
+   },
+);
 
 export default axiosClient;
