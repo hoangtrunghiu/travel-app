@@ -136,6 +136,19 @@ function Sidenav({ color }) {
                   <span className="label">Category Blog</span>
                </Link>
             </Menu.Item>
+            <Menu.Item key="33333">
+               <Link to="/admin/category-tour/list">
+                  <span
+                     className="icon"
+                     style={{
+                        background: page === 'tables' ? color : '',
+                     }}
+                  >
+                     {tables}
+                  </span>
+                  <span className="label">Category Tour</span>
+               </Link>
+            </Menu.Item>
             <Menu.Item key="333">
                <Link to="/admin/post/list">
                   <span
