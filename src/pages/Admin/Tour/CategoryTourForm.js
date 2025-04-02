@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Switch, Select, Card, Row, Col, Spin, Typography, Alert, Popconfirm } from 'antd';
 import { useParams, useNavigate } from 'react-router-dom';
 import { addCategory, updateCategory, getCategoryTourById, getAllCategoryTours } from '@/services/categoryTourService';
+import { getImagesByEntity, updateEntityImages } from '@/services/libraryImageService';
 import { flattenCategoryTour } from '@/utils/flattenData';
 import CustomCKEditor from '@/components/Admin/Editor/CustomCKEditor';
 import { generateSlug } from '@/utils/stringUtils';
 import { useNotify } from '@/utils/notify';
 import AvatarPicker from '@/components/Admin/Form/AvatarPicker';
+import ImageGallery from '@/components/Admin/Form/ImageGallery';
 
 const { Title } = Typography;
 const { TextArea } = Input;
@@ -25,6 +27,7 @@ const CategoryTourForm = () => {
    const [submitting, setSubmitting] = useState(false);
    const [categories, setCategories] = useState([]);
    const [categoryTour, setCategoryTour] = useState([]);
+   const [selectedImages, setSelectedImages] = useState([]);
    const [initialValues, setInitialValues] = useState({
       categoryName: '', //Tên thể loại
       topic: '', //Tên chủ đề chính
@@ -57,10 +60,10 @@ const CategoryTourForm = () => {
       fetchCategories();
    }, []);
 
-   // Tải dữ liệu bài viết nếu ở chế độ chỉnh sửa
+   // Tải dữ liệu danh mục nếu ở chế độ chỉnh sửa
    useEffect(() => {
       if (isEditMode) {
-         const fetchPost = async () => {
+         const fetchCategoryTour = async () => {
             setLoading(true);
             try {
                const postData = await getCategoryTourById(id);
@@ -82,15 +85,25 @@ const CategoryTourForm = () => {
                };
                setInitialValues(formData);
                form.setFieldsValue(formData);
+
+               // Tải thư viện ảnh
+               try {
+                  const images = await getImagesByEntity('CategoryTour', id);
+                  const imageUrls = images.map((img) => img.imageUrl);
+                  setSelectedImages(imageUrls);
+               } catch (imageError) {
+                  console.error('Error fetching images:', imageError);
+                  notifyError('Không thể tải hình ảnh của danh mục');
+               }
             } catch (error) {
                console.error('Error fetching post:', error);
-               notifyError('Không thể tải thông tin bài viết');
+               notifyError('Không thể tải thông tin danh mục');
             } finally {
                setLoading(false);
             }
          };
 
-         fetchPost();
+         fetchCategoryTour();
       }
    }, [id, isEditMode, form]);
 
@@ -126,15 +139,25 @@ const CategoryTourForm = () => {
                ? { editor: userData.email, editorName: userData.fullName, id: categoryTour.id } // Nếu edit, dùng editor
                : { creator: userData.email, creatorName: userData.fullName }), // Nếu tạo mới, dùng creator
          };
-
+         let entityId;
          let response;
          if (isEditMode) {
             await updateCategory(id, postData);
+            entityId = id;
             setSuccessMessage('Cập nhật danh mục thành công');
          } else {
             response = await addCategory(postData);
+            entityId = response.id;
             setSuccessMessage('Thêm danh mục mới thành công');
          }
+         //thêm/cập nhật bộ sưu tập
+         try {
+            await updateEntityImages('CategoryTour', entityId, selectedImages);
+         } catch (imageError) {
+            console.error('Error saving images:', imageError);
+         }
+         //end image
+
          window.scrollTo({ top: 0, behavior: 'smooth' });
          setErrorMessage(null);
          navigate(`/admin/category-tour/edit/${isEditMode ? id : response.id}`);
@@ -210,7 +233,10 @@ const CategoryTourForm = () => {
                      </Form.Item>
                   </Card>
                   <br />
-
+                  <Card type="inner" title="Bộ sưu tập hình ảnh">
+                     <ImageGallery value={selectedImages} onChange={setSelectedImages} />
+                  </Card>
+                  <br />
                   {/* Tối ưu seo */}
                   <Card type="inner" title="Tối ưu SEO">
                      <Form.Item
