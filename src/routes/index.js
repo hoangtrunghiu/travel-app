@@ -25,6 +25,8 @@ import ProtectedRoute from '@/pages/Auth/ProtectedRoute';
 import ListCategoryTour from '@/pages/Admin/Tour/ListCategoryTour';
 import CategoryTourForm from '@/pages/Admin/Tour/CategoryTourForm';
 
+import LocationManager from '@/pages/Admin/location/LocationManager';
+
 const AppRoutes = () => {
    return (
       <Router>
@@ -54,6 +56,7 @@ const AppRoutes = () => {
                   <Route path="category-tour/list" element={<ListCategoryTour />} />
                   <Route path="category-tour/create" element={<CategoryTourForm />} />
                   <Route path="category-tour/edit/:id" element={<CategoryTourForm />} />
+                  <Route path="locations" element={<LocationManager />} />
                </Route>
             </Route>
             {/* Layout User */}
